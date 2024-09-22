@@ -2,21 +2,17 @@ FROM ros:humble
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update > /dev/null \
-	&& apt-get install -y --no-install-recommends apt-utils > /dev/null \
-	&& apt-get install -y build-essential > /dev/null \
-	&& apt-get install -y afl > /dev/null \
-	&& apt-get install -y vim > /dev/null \
-	&& apt-get install -y nano > /dev/null \
-	&& apt-get install -y git > /dev/null \
-	&& apt-get install -y clang > /dev/null \
-	&& apt-get install -y lcov > /dev/null \
-	&& apt-get install -y cmake > /dev/null \
-	&& apt-get install -y software-properties-common > /dev/null \
+# Suppress output only when needed; remove for debugging if necessary
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends apt-utils && \
+    apt-get install -y build-essential afl vim nano git clang lcov cmake software-properties-common
 
-RUN apt-get update > /dev/null && \
-    apt-get install -y python3-pip && \
-    pip3 install numpy pytest
+# Install Python and pip
+RUN apt-get update && \
+    apt-get install -y python3-pip
+
+# Install Python packages
+RUN pip3 install numpy pytest
 
 
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash"
